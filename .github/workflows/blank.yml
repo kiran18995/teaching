@@ -2,35 +2,24 @@ name: Grammar Check
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   grammar:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install Vale
         run: |
-          wget https://github.com/errata-ai/vale/releases/latest/download/vale_Linux_64-bit.tar.gz
-          tar -xzf vale_Linux_64-bit.tar.gz
-          sudo mv vale /usr/local/bin/
+          curl -fsSL https://vale.sh/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
 
-      - name: Create Vale configuration
-        run: |
-          cat > .vale.ini << EOF
-          StylesPath = styles
-          
-          [*.md]
-          BasedOnStyles = Vale
-          EOF
+      - name: Check Vale version
+        run: vale --version
 
       - name: Run grammar check
         run: vale .
