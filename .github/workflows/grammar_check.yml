@@ -13,7 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Vale styles
+        run: |
+          mkdir -p .github/styles
+          vale sync
+
       - name: Run Vale
         uses: errata-ai/vale-action@v2
-        with:
-          files: .
